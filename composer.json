@@ -1,0 +1,21 @@
+{
+    "name": "root/ever-webinar-wrapper",
+    "description": "integrate you everwebinar api with you'r application",
+    "type": "project",
+    "license": "mit",
+    "authors": [
+        {
+            "name": "Hossasm Yassin",
+            "email": "hossam.yassin@live.com"
+        },
+        {
+            "name": "Yehia Abdulhamid",
+            "email": "yehia.abdulhamid@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "~2.0",
+        "vlucas/phpdotenv": "^2.4",
+        "rmccue/requests": "^1.7"
+    }
+}
