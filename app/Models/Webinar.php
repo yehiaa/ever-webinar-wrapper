@@ -1,7 +1,7 @@
 <?php 
 namespace App\Models;
 
-class Webinar
+class Webinar implements \JsonSerializable
 {
     private $id;
     private $name;
@@ -42,6 +42,16 @@ class Webinar
     public function addSchedule(Schedule $schedule)
     {
         $this->schedules [] = $schedule;
+    }
+
+    public function jsonSerialize() {
+        return array(
+            "schedules" => $this->schedules,
+            "presenters" => $this->presenters,
+            "id" => $this->id,
+            "name" => $this->name,
+            "description" => $this->description
+            );
     }
 
     public static function buildFromStdClass($stdClass)

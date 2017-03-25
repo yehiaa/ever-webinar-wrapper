@@ -3,41 +3,72 @@
 require __dir__.'/../vendor/autoload.php';
 require __dir__.'/../bootstrap.php';
 
-$app = new \Slim\Slim();
+$app = new \Slim\Slim(
+    array('templates.path' => '../templates') );
 
 use App\Apis\EverWebinarApi;
 use App\Models\Webinar;
+use App\Models\Schedule;
 
 $api = new EverWebinarApi(getenv("baseUrl"), getenv("apiKey"), getenv("AutoTimeZone"));
 
-// var_dump($api->webinar("webinar id ") );
-// var_dump($api->webinars());
-// var_dump($api->allWebinars());
+// test schedule 
+// "Every Day 18:30 PM" 
+        // "Every Tuesday, 01:00 PM",
+        // "Every Thursday, 08:00 PM",
+        // "Every Saturday, 01:00 PM" 
+$x = new Schedule("Every Day, 10:30 PM"); //the time is wrong !!
 
-// $webinarsStd = $api->allWebinars();
-// var_dump($webinarsStd);
+$result = $x->getRepetition();
+// var_dump($result);
 
-// $webinar = Webinar::buildFromStdClass($api->webinar("993bc1c46d"));
-// $webinars = array();
-// foreach ($webinarsStd as $webinarStd) {
-//     $webinars [] = Webinar::buildFromStdClass($webinarStd);
-// }
-// var_dump($webinars);
+$x = new Schedule("Every Tuesday, 09:00 PM");
+
+$result = $x->getRepetition();
+// var_dump($result);
+
+$x = new Schedule("Tuesday, 09:00 PM");
+$x->setTimeZoneStr("America/Jamaica");
+
+var_dump($x->getTimestamp());
+
+// $x = new Schedule("Mon, 6 Jul 20:01 PM"); //wrong time wrong date 
+// var_dump($x->getTimestamp());
+
+$x = new Schedule("Thursday, 6 Jul 08:30 AM"); //wrong time wrong date 6 jul is Thursday
+$x->setTimeZoneStr("America/Jamaica");
+
+var_dump($x->getTimestamp());
+var_dump($x->getRepetition());
 
 
-$app->get('/webinars/', function () {
-    echo "returns all webinars";
+
+$x = new Schedule("Every Saturday , 12:30 PM");
+
+$result = $x->getRepetition();
+// var_dump($result);
+
+
+$app->get('/api/webinars/', function () use ($app, $api) {
+    $webinars = array();
+    $webinarsStd = $api->allWebinars();
+    foreach ($webinarsStd as $webinarStd) {
+        $webinars [] = Webinar::buildFromStdClass($webinarStd);
+    }
+    echo json_encode($webinars);
 });
 
-$app->get('/webinars/:id', function ($id) {
-    echo "return certain webinar {$id}, " ;
+$app->get('/api/webinars/:id', function ($id) use ($app, $api){
+    $webinar = Webinar::buildFromStdClass($api->webinar($id));
+    echo json_encode($webinar);
 });
 
-$app->get('/register/', function () {
-    echo "return HTML form";
+$app->get('/register/:webinar_id', function ($webinar_id) use ($app){
+    $id = "this is the id ";
+    $app->render('register.php', array('id' => $id));
 });
 
-$app->post('/register/', function () {
+$app->post('/register/:webinar_id', function ($webinar_id) use ($app, $api){
     echo "post register user ... ";
 });
 
