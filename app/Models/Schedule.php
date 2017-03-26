@@ -65,7 +65,7 @@ class Schedule implements \JsonSerializable
 
     public function getISOUTCDateTime($timezone="UTC")
     {
-        $dateTime = new \DateTime("now", new \DateTimeZone($timezone));
+        $dateTime = new \DateTime("now", new \DateTimeZone("utc"));
         $dateTime->setTimestamp($this->timestamp);
         return $dateTime->format(\DateTime::ATOM);
     }
@@ -77,6 +77,7 @@ class Schedule implements \JsonSerializable
         $day = "";
         $dateTimeStr = "";
         $timestamp = null;
+        $dateTimeObj = null;
         if ($repetition) {
             $repetitionArr = explode(" ", $repetition);
             if ($repetitionArr[1] != "Day")
@@ -84,19 +85,26 @@ class Schedule implements \JsonSerializable
 
             $matches = array();
             if(preg_match("/\d\d:\d\d \w\w/", $str, $matches)){
-                if ( strtotime($day . $matches[0]) !== false) 
-                    $timestamp = strtotime($day . $matches[0]);
+                if ( strtotime($day . $matches[0]) !== false){
+                    $timestamp = (new \DateTime($day . $matches[0], 
+                        new \DateTimeZone($this->timeZoneStr)))
+                        ->format("U");
+                }
             }
         }else{
-            if (strtotime($str) !== false) 
-                $timestamp = strtotime($str);
+            if (strtotime($str) !== false){
+                $dateTimeObj = new \DateTime(
+                    $str, new \DateTimeZone($this->timeZoneStr));
+                $timestamp = $dateTimeObj->format("U");
+            }
         }
 
         if (! $timestamp) {
             // ex :"Thursday, 6 Jul 08:30 AM"
-            $dt = \DateTime::createFromFormat ( "l, n M h:i A" , $str , new \DateTimeZone($this->timeZoneStr));
-            if ($dt !== false) {
-                $timestamp = $dt->getTimestamp();
+            $dateTimeObj = \DateTime::createFromFormat ( "l, j M h:i A" , $str ,
+             new \DateTimeZone($this->timeZoneStr));
+            if ($dateTimeObj !== false) {
+                $timestamp = $dateTimeObj->getTimestamp();
             }
         }
 
@@ -118,7 +126,9 @@ class Schedule implements \JsonSerializable
         return array(
             "schedule_id" => $this->id,
             "repetition" => $this->getRepetition(),
-            "isoUTC" => $this->getISOUTCDateTime()
+            "isoUTC" => $this->getISOUTCDateTime(),
+            "originalTimezone" => $this->timeZoneStr,
+            "originalTime" => $this->originalDateTimeStr
             );
     }
 
