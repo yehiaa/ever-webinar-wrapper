@@ -107,13 +107,12 @@ class EverWebinarApi
 
     public function register($webinar_id, $name, $email, $schedule_id)
     {
-        return ;
         $data = $this->buildData(array(
             'webinar_id' => $webinar_id,
             'name' => $name,
             'email' => $email,
             'schedule' => $schedule_id,
-            'timezone' => $this->defaultTimeZone
+            // 'timezone' => $this->defaultTimeZone //required if you set timezone auto
             ));
 
         return $this->processRepsponse($this->postRequest("register", $data), "user");

@@ -39,6 +39,15 @@ class Webinar implements \JsonSerializable
         $this->schedules = $schedules;
     }
 
+    public function getSchedules()
+    {
+        usort($this->schedules, function ($a, $b)
+        {
+            return ($a->getTimestamp() < $b->getTimestamp()) ? -1 : 1;
+        });
+        return $this->schedules;
+    }
+
     public function addSchedule(Schedule $schedule)
     {
         $this->schedules [] = $schedule;
@@ -46,7 +55,7 @@ class Webinar implements \JsonSerializable
 
     public function jsonSerialize() {
         return array(
-            "schedules" => $this->schedules,
+            "schedules" => $this->getSchedules(),
             "presenters" => $this->presenters,
             "id" => $this->id,
             "name" => $this->name,
