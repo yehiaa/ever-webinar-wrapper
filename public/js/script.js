@@ -1,10 +1,13 @@
 function populateSchedulField($selector, data) {
+    var tzStr = moment.tz.guess();
     for (var i = 0; i < data.schedules.length; i++) {
         $selector.append($("<option></option>")
               .attr("value", data.schedules[i].schedule_id)
               .text(
-                moment(data.schedules[i].isoUTC).format("dddd, MMMM Do YYYY, h:mm:ss a") + 
-                ((data.schedules[i].repetition.length > 0) ? "  - " + data.schedules[i].repetition : "")
+                tzStr + " " +
+                moment(
+                  data.schedules[i].isoUTC).format("dddd, MMMM Do YYYY, h:mm:ss a") +
+                ((data.schedules[i].repetition.length > 0) ? " - " + data.schedules[i].repetition : "")
         ));
     }//end for
     $selector.selectpicker('refresh');
