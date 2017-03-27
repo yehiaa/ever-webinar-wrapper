@@ -20,10 +20,10 @@ function countDownTimer($selector, momentObj) {
   setInterval(function(){
     duration = moment.duration(duration - interval , 'milliseconds');
       var html = "The webinar starts in ";
-      html += moment.duration(duration.hours(), "hours").humanize() + " ";
-      html += moment.duration(duration.minutes(), "minutes").humanize() + " ";
-      html += moment.duration(duration.seconds(), "seconds").humanize();
-      // html += duration.humanize() ;
+      // html += moment.duration(duration.hours(), "hours").humanize() + " ";
+      // html += moment.duration(duration.minutes(), "minutes").humanize() + " ";
+      // html += moment.duration(duration.seconds(), "seconds").humanize();
+      html += duration.humanize() ;
       $selector.html(html);
   }, interval);
 }
