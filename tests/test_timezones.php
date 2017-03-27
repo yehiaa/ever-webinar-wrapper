@@ -61,4 +61,47 @@ class timezone_test extends TestCase
              new \DateTimeZone($tzStr));
         $this->assertEquals("2017-12-14", $dateTimeObj->format("Y-m-d"));
     }
+
+    public function test_everySpecificDayUsingScheduleClass()
+    {
+        $format = "l, h:i A";
+
+        /*
+        isoUTC": "2017-03-28T17:00:00+00:00",
+        "originalTimezone": "America/New_York",
+        "originalTime": "Every Tuesday, 01:00 PM"
+        */
+        $schedule1 = Schedule::buildFromStdClass("Every Tuesday, 01:00 PM", "America/New_York");
+        
+        $dt = \DateTime::createFromFormat($format, "Tuesday, 01:00 PM", new \DateTimeZone("America/New_York"));
+        $dtUTC = clone $dt;
+        $dtUTC->setTimezone(new \DateTimeZone("UTC"));
+        $this->assertEquals($dtUTC->format(\DateTime::ATOM), $schedule1->getISOUTCDateTime());
+
+        /*
+        isoUTC": "2017-03-31T00:00:00+00:00",
+        "originalTimezone": "America/New_York",
+        "originalTime": "Every Thursday, 08:00 PM"
+        */
+        $schedule1 = Schedule::buildFromStdClass("Every Thursday, 08:00 PM", "America/New_York");
+
+        $dt = \DateTime::createFromFormat($format, "Thursday, 08:00 PM", new \DateTimeZone("America/New_York"));
+        $dtUTC = clone $dt;
+        // var_dump($dt->format(\DateTime::ATOM));
+        $dtUTC->setTimezone(new \DateTimeZone("UTC"));
+        $this->assertEquals($dtUTC->format(\DateTime::ATOM), $schedule1->getISOUTCDateTime());
+
+        /*
+        isoUTC": "2017-04-01T17:00:00+00:00",
+        "originalTimezone": "America/New_York",
+        "originalTime": "Every Saturday, 01:00 PM"
+        */
+        $schedule1 = Schedule::buildFromStdClass("Every Saturday, 01:00 PM", "America/New_York");
+
+        $dt = \DateTime::createFromFormat($format, "Saturday, 01:00 PM", new \DateTimeZone("America/New_York"));
+        $dtUTC = clone $dt;
+
+        $dtUTC->setTimezone(new \DateTimeZone("UTC"));
+        $this->assertEquals($dtUTC->format(\DateTime::ATOM), $schedule1->getISOUTCDateTime());
+    }
 }
