@@ -93,6 +93,17 @@ $app->get('/register/:webinar_id', function ($webinar_id) use ($app, $api){
     }
 });
 
+
+$app->get('/register_ajax/:webinar_id', function ($webinar_id) use ($app, $api){
+    try {
+        $url = $app->urlFor('register_post', array('webinar_id' => $webinar_id));
+        $app->render('register_ajax.php', 
+            array('webinar_id' => $webinar_id, 'url' => $url));
+    } catch (Exception $e) {
+        $app->error();
+    }
+});
+
 $app->post('/register/:webinar_id', function ($webinar_id) use ($app, $api){
     $webinar_id  = $webinar_id;
     $schedule_id = $app->request->post('schedule_id');
@@ -124,15 +135,7 @@ $app->post('/register/:webinar_id', function ($webinar_id) use ($app, $api){
 })->name("register_post");
 
 
-$app->get('/register_ajax/:webinar_id', function ($webinar_id) use ($app, $api){
-    try {
-        $url = $app->urlFor('register_post', array('webinar_id' => $webinar_id));
-        $app->render('register_ajax.php', 
-            array('webinar_id' => $webinar_id, 'url' => $url));
-    } catch (Exception $e) {
-        $app->error();
-    }
-});
+
 
 
 if (PHP_SAPI != "cli")

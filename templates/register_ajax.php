@@ -96,7 +96,7 @@
 
       function getData(url) {
           $('.modal').show();
-          $.getJSON("http://localhost:8585/api/webinars/"+ webinar_id, function (data) {
+          $.getJSON("/api/webinars/"+ webinar_id, function (data) {
               $schedule_idSelect = $('#schedule_id');
               populateSchedulField($schedule_idSelect, data);
               $('.modal').hide();
