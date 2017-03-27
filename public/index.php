@@ -13,7 +13,10 @@ $app->jsonError = function () use ($app) {
     $response = $app->response;
     $response->setStatus(400);
     $response->headers->set('Content-Type', 'application/json');
-    $response->setBody('something went wrong sorry for inconvenient');
+    $response->setBody(json_encode(
+            array('status'=> 'error',
+                'message'=>'something went wrong sorry for inconvenience'))
+    );
     return $response;
 };
 
