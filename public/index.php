@@ -23,6 +23,8 @@ use App\Models\Schedule;
 
 $api = new EverWebinarApi(getenv("baseUrl"), getenv("apiKey"), getenv("AutoTimeZone"));
 
+$GLOBALS["register"] = "global scooop ..."; 
+$theglobal = "this is global var ";
 $app->get('/api/webinars/', function () use ($app, $api) {
     $response = $app->response();
     $response['Content-Type'] = 'application/json';
@@ -94,15 +96,15 @@ $app->post('/register/:webinar_id', function ($webinar_id) use ($app, $api){
     $v = new Valitron\Validator($app->request->post());
     $v->rule('required', array('name', 'email', 'schedule_id'));
     $v->rule('email', 'email');
-    $v->rule('name', 'lengthMin', 4);
-
     try {
         if($v->validate()) {
             $user = $api->register($webinar_id, $name, $email, $schedule_id);
-            $app->redirect($user->thank_you_url);
+            if (isset($user->thank_you_url)) {
+                $app->redirect($user->thank_you_url);
+            }else{
+                $app->error();
+            }
         } 
-    // $app->render('finishRegister.php', array('user' => $user, 'webinar_id' => $webinar_id));
-        echo json_encode($user);
     } catch (Exception $e) {
         $app->error();
     }
