@@ -33,8 +33,9 @@ function countDownTimer($selector, momentObj) {
 
 function getData(url) {
     $('.modal').show();
-    $.getJSON("/api/webinars/"+ webinar_id, function (data) {
-        $schedule_idSelect = $('#schedule_id');
+    var xhr = $.getJSON("/api/webinars/"+ webinar_id);
+    xhr.done(function (data) {
+      $schedule_idSelect = $('#schedule_id');
         populateSchedulField($schedule_idSelect, data);
         if (data.schedules) {
           if (data.schedules[0]) {
@@ -42,7 +43,10 @@ function getData(url) {
           }
         }
         $('.modal').hide();
-    }, function () {
-        $('.modal').hide();
     });
+
+    xhr.fail(function (err) {
+        $('.modal').hide();
+        console.error('something wrong happen', err.responseText)
+    })
 }
