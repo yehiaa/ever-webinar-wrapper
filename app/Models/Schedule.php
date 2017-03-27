@@ -102,7 +102,7 @@ class Schedule implements \JsonSerializable
         if (! $timestamp) {
             // ex :"Thursday, 6 Jul 08:30 AM"
             $dateTimeObj = \DateTime::createFromFormat ( "l, j M h:i A" , $str ,
-             new \DateTimeZone($this->timeZoneStr));
+            new \DateTimeZone($this->timeZoneStr));
             if ($dateTimeObj !== false) {
                 $timestamp = $dateTimeObj->getTimestamp();
             }
