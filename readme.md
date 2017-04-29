@@ -5,7 +5,7 @@
 ## how to use it 
 
 
-# endpoints apis
+# api endpoints 
 
 ## get all webinars processed {utc time zones and each schedule has its id } 
 
@@ -31,15 +31,15 @@ http://example.com/api/webinars/{webinar_id}
 http://example.com/api/webinars/raw/{webinar_id}
 ```
 
-# endpoints registrations 
+# registrations endpoints 
 
-## register form for specific webinar Non-ajax based 
+## register form for specific webinar Non-ajax
 
 ``` 
 http://example.com/register/{webinar_id}
 ```
 
-## register form for specific webinar ajax based
+## register form for specific webinar ajax
 
 ``` 
 http://example.com/register_ajax/{webinar_id}
