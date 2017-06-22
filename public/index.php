@@ -27,8 +27,6 @@ use Valitron\Validator;
 
 $api = new EverWebinarApi(getenv("baseUrl"), getenv("apiKey"), getenv("AutoTimeZone"));
 
-$GLOBALS["register"] = "global scooop ..."; 
-$theglobal = "this is global var ";
 $app->get('/api/webinars/', function () use ($app, $api) {
     $response = $app->response();
     $response['Content-Type'] = 'application/json';
