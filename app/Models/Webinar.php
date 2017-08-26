@@ -6,15 +6,13 @@ class Webinar implements \JsonSerializable
     private $id;
     private $name;
     private $description;
-    private $timezoneStr;
     private $schedules;
     private $presenters;
 
-    public function __construct($name, $description, $timezoneStr)
+    public function __construct($name, $description)
     {
         $this->name        = $name;
         $this->description = $description;
-        $this->timezoneStr = $timezoneStr;
         $this->presenters  = array();
         $this->schedules   = array();
     }
