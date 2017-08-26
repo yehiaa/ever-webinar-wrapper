@@ -44,9 +44,9 @@ class EverWebinarApi
     {
         try {
             return \Requests::post($this->baseUrl ."/". $segment, $headers, $data);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error = "something went wrong";
-            throw new Exception("Error Processing Request", 1);
+            throw new \Exception("Error Processing Request", 1);
         }
     }
 
