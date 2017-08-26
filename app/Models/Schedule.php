@@ -6,7 +6,6 @@ class Schedule implements \JsonSerializable
     private $id;
     private $originalDateTimeStr;
     private $timeZoneStr;
-    private $UTCTimeStr;
     private $timestamp;
     private $repetition;
     private $repetitionDay;
@@ -16,7 +15,6 @@ class Schedule implements \JsonSerializable
         $this->id                  = $id;
         $this->originalDateTimeStr = $originalDateTimeStr;
     }
-
 
 
     public function setId($id)
@@ -75,7 +73,6 @@ class Schedule implements \JsonSerializable
         $repetition = $this->repetition;
         $str = $this->originalDateTimeStr;
         $day = "";
-        $dateTimeStr = "";
         $timestamp = null;
         $dateTimeObj = null;
         if ($repetition) {
@@ -84,28 +81,25 @@ class Schedule implements \JsonSerializable
                 $day = "{$repetitionArr[1]}, " ;
 
             $matches = array();
-            if(preg_match("/\d\d:\d\d \w\w/", $str, $matches)){
-                if ( strtotime($day . $matches[0]) !== false){
-                    $timestamp = (new \DateTime($day . $matches[0], 
+            if(preg_match("/\d\d:\d\d \w\w/", $str, $matches) && (strtotime($day . $matches[0]) !== false)){
+                    $timestamp = (new \DateTime($day . $matches[0],
                         new \DateTimeZone($this->timeZoneStr)))
                         ->format("U");
-                }
             }
-        }else{
-            if (strtotime($str) !== false){
+        }else if(strtotime($str) !== false) {
                 $dateTimeObj = new \DateTime(
                     $str, new \DateTimeZone($this->timeZoneStr));
                 $timestamp = $dateTimeObj->format("U");
-            }
         }
 
         if (! $timestamp) {
             // ex :"Thursday, 6 Jul 08:30 AM"
-            $dateTimeObj = \DateTime::createFromFormat ( "l, j M h:i A" , $str ,
-            new \DateTimeZone($this->timeZoneStr));
-            if ($dateTimeObj !== false) {
-                $timestamp = $dateTimeObj->getTimestamp();
-            }
+            $dateTimeObj = \DateTime::createFromFormat ( "l, j M h:i A",
+                $str,
+                new \DateTimeZone($this->timeZoneStr)
+            );
+
+            $timestamp = ($dateTimeObj !== false) ? null : $dateTimeObj->getTimestamp();
         }
 
         return $timestamp;
